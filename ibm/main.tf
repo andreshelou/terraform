@@ -7,7 +7,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu+ssh://root@192.168.0.141/system"
+  uri = "qemu+ssh://root@192.168.0.141/system?sshauth=privkey&keyfile=/Users/andres/.ssh/id_rsa"
 }
 
 resource "libvirt_volume" "disk_master_1" {

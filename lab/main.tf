@@ -16,10 +16,18 @@ variable "master_count" {
 variable "node_count" {
   default = 3
 }
+
+resource "libvirt_volume" "cloudinit_iso" {
+  name   = "commoninit.iso"
+  pool   = "default"
+  #source = "/var/lib/libvirt/images/commoninit.iso"  # opcional, lo podés dejar
+  format = "raw"
+}
 resource "libvirt_volume" "disk_master" {
   count = var.master_count
   name = "k8s-master-${count.index + 1}.qcow2"
   pool = "default"
+  #source = "/var/lib/libvirt/images/ubuntu-24.04-server-cloudimg-amd64.qcow2"
   size = 11474836480 # 20 GiB
 }
 resource "libvirt_volume" "disk_node" {
@@ -28,7 +36,6 @@ resource "libvirt_volume" "disk_node" {
   pool = "default"
   size = 21474836480 # 20 GiB
 }
-
 
 resource "libvirt_domain" "k8s-master" {
   count  = var.master_count

@@ -1,0 +1,22 @@
+variable "ssh_pub_key" {
+  default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDFAoL4zeJ7yD59/gy2Gyyo+NvMq388npn2Z2xmumJCqJeQ9sNwZJK7paC6v7tRskN4SsllBh5wTDh6/wR7X9MGS3mze5tZh1sXwEHuIRs04dpXS7k8jCa08oyysZsKVZK/VT34F1y87g5wBKHIUUa325nDGakYw0Kygi/YzLxRuE0Sx64prm7NcIOiLc4y1PtPzlIlLzs3bO8A6mefet9gociLqSlpc5Lq09Xn9CAKY0LVJGgpeNqZ0bQ3YpHL7b3lvo3wW1Qs8lgR9Py78HtFtEua+1Cv8jy60Jm5eP4CXH+xijJEO4/VX6QGycEKBfshtZFOoTzhycBoJseoEdnPivQNOz2bNJ437DZcL3zixmaZOMgHCO2rCLq+cfRyFKyY/16ln1b5yakKuoCdt6Fj8EYh6Yq1aOLMUQQtg1iIaUCEQFkvkZ7u0SWNGpHNu/FEndg96FwASWj/mWmg7keqhkCGiQcm4gkee0Sdv79xsY4LyIvqDjg6kpL55470lM8= andres@Andress-MacBook-Pro.local"
+}
+
+resource "libvirt_cloudinit_disk" "commoninit" {
+  name      = "commoninit.iso"
+  pool      = "default"
+  user_data = <<EOF
+#cloud-config
+users:
+  - name: andres
+    groups: sudo
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh-authorized-keys:
+      - ${var.ssh_pub_key}
+ssh_pwauth: false
+disable_root: true
+chpasswd:
+  expire: false
+EOF
+}
